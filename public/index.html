@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset='utf-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Chat da RocketSeat</title>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js"></script>
-    
+
     <script src="https://cdn.socket.io/socket.io-1.7.0.js"></script>
-    
+
     <link rel="stylesheet" href="styles.css">
 
 </head>
+
 <body>
     <form id="chat">
         <input type="text" name="username" placeholder="Digite seu usário">
@@ -19,42 +21,82 @@
         <input type="text" name="message" placeholder="Digite sua mensagem">
         <button type="submit">Enviar</button>
     </form>
-        
-        <script type="text/javascript">
-        var socket = io ('http://192.168.0.6:3000/');
 
-        function renderMessage(message){
-            $('.messages').append('<div class="message"><strong>'+message.author+'</strong>: '+message.message+'</div>');
+    <script type="text/javascript">
+        var socket = io('http://localhost:3000c');
+
+        function renderMessage(message) {
+            $('.messages').append('<div class="message"><strong>' + message.author + '</strong>: ' + message.message + '</div>');
         }
-        socket.on('previousMessage', function(messages){
+        socket.on('previousMessage', function (messages) {
             for (message of messages) {
                 renderMessage(message);
             }
         });
 
-        socket.on('receivedMessage', function(message){
+        socket.on('receivedMessage', function (message) {
             renderMessage(message);
         });
-        
 
-        $('#chat').submit(function(event){
+
+        $('#chat').submit(function (event) {
             event.preventDefault();
 
             var author = $('input[name=username]').val();
             var message = $('input[name=message]').val();
-            if(author.length && message.length) {
+            if (author.length && message.length) {
                 console.log("Mensagem Captada!");
-                var messageObject = {
-                    author:author,
-                    message:message,
-                };
-                renderMessage(messageObject);
-                
-                socket.emit('sendMessage', messageObject);
+                let all = [
+                    messageObject = {
+                        author: author,
+                        message: message,
+                    },
+                    bot = {
+                        author: "Robot",
+                        message: "oi",
+                    },
+                    bot2 = {
+                        author: "Robot",
+                        message: "com oque posso te ajudar ?",
+                    },
+                    bot3 = {
+                        author: "Robot",
+                        message: "não intendi",
+                    }
+                ]
+                if (all[0].message === "oi") {
+
+                    renderMessage(all[0]);
+
+                    renderMessage(all[1]);
+
+                } else if (all[0].message === "help") {
+
+                    renderMessage(all[0]);
+
+                    renderMessage(all[2]);
+
+                }
+                else if (!all[0].message === "help" || "oi") {
+
+                    renderMessage(all[0]);
+
+                    renderMessage(all[3]);
+
+                }
+                else {
+                    renderMessage(all[0]);
+                }
+                // console.log(all[0].message)
+                // renderMessage(all[1]);
+
+
+                socket.emit('sendMessage', all);
             }
         });
-        </script>
-        
-    
+    </script>
+
+
 </body>
+
 </html>
